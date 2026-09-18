@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nawab Budget Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: '#0f172a',
+              panel: '#111827',
+              accent: '#22c55e',
+              expense: '#ef4444',
+              income: '#10b981',
+              muted: '#94a3b8'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #020817 0%, #111827 100%);
+      }
+      .glass {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+      }
+      .nav-btn.active {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.35);
+        color: #ecfdf5;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-100 antialiased">
+    <div class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-6 lg:flex-row">
+        <aside class="lg:w-72">
+          <div class="glass rounded-2xl border border-slate-700 p-4 shadow-2xl">
+            <div class="mb-4 px-3 py-2">
+              <p class="text-xs uppercase tracking-[0.25em] text-emerald-400">Nawab</p>
+              <h2 class="mt-2 text-xl font-semibold text-white">Finance Hub</h2>
+            </div>
+            <nav class="space-y-2">
+              <button id="dashboardNavBtn" class="nav-btn active flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 text-left text-sm font-medium text-slate-200 transition hover:border-emerald-500 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12.75V21h7.5V12.75H3zm10.5 0V21H21v-8.25h-7.5zM3 9V3h7.5v6H3zm10.5 0V3H21v6h-7.5z"/></svg>
+                Dashboard
+              </button>
+            </nav>
+          </div>
+        </aside>
+
+        <main class="flex-1">
+          <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm uppercase tracking-[0.2em] text-emerald-400">Nawab</p>
+              <h1 class="mt-2 text-3xl font-bold text-white">Personal Finance Dashboard</h1>
+            </div>
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200">
+                <span>Currency</span>
+                <select id="currencySelect" class="bg-slate-900 text-white outline-none">
+                  <option value="PKR">PKR</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </label>
+              <button id="logoutBtn" class="hidden rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-500 hover:text-white">
+                Logout
+              </button>
+            </div>
+          </header>
+
+          <section id="authSection" class="mx-auto max-w-md">
+            <div class="glass overflow-hidden rounded-2xl border border-slate-700 shadow-2xl">
+              <div class="flex border-b border-slate-700">
+                <button id="loginTab" class="flex-1 bg-slate-900 px-4 py-3 text-sm font-semibold text-white">Login</button>
+                <button id="registerTab" class="flex-1 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-300">Register</button>
+              </div>
+              <div class="p-6">
+                <form id="authForm" class="space-y-4">
+                  <div id="nameField" class="hidden">
+                    <label class="mb-2 block text-sm text-slate-300">Full Name</label>
+                    <input id="nameInput" type="text" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500" placeholder="Jane Doe" />
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-sm text-slate-300">Email</label>
+                    <input id="emailInput" type="email" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500" placeholder="you@example.com" required />
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-sm text-slate-300">Password</label>
+                    <input id="passwordInput" type="password" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500" placeholder="••••••••" required />
+                  </div>
+
+                  <button id="authSubmitBtn" type="submit" class="w-full rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400">
+                    Login
+                  </button>
+                </form>
+                <p id="authMessage" class="mt-4 hidden rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"></p>
+              </div>
+            </div>
+          </section>
+
+          <section id="dashboardSection" class="hidden">
+            <div class="mb-8 grid gap-4 md:grid-cols-3">
+              <div class="glass rounded-2xl border border-slate-700 p-5 shadow-lg">
+                <p class="text-sm text-slate-300">Total Balance</p>
+                <h2 id="balanceValue" class="mt-3 text-3xl font-bold text-white">$0.00</h2>
+              </div>
+              <div class="glass rounded-2xl border border-slate-700 p-5 shadow-lg">
+                <p class="text-sm text-slate-300">Total Income</p>
+                <h2 id="incomeValue" class="mt-3 text-3xl font-bold text-emerald-400">$0.00</h2>
+              </div>
+              <div class="glass rounded-2xl border border-slate-700 p-5 shadow-lg">
+                <p class="text-sm text-slate-300">Total Expenses</p>
+                <h2 id="expenseValue" class="mt-3 text-3xl font-bold text-rose-400">$0.00</h2>
+              </div>
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-[1.1fr,1.7fr]">
+              <div class="glass rounded-2xl border border-slate-700 p-6">
+                <h3 class="mb-4 text-xl font-semibold text-white">Add Transaction</h3>
+                <form id="transactionForm" class="space-y-4">
+                  <div>
+                    <label class="mb-2 block text-sm text-slate-300">Description</label>
+                    <input id="transactionDescription" type="text" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500" placeholder="Freelance project" required />
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-sm text-slate-300">Amount</label>
+                    <input id="transactionAmount" type="number" min="0.01" step="0.01" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500" placeholder="250.00" required />
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-sm text-slate-300">Type</label>
+                    <select id="transactionType" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:border-emerald-500">
+                      <option value="income">Income</option>
+                      <option value="expense">Expense</option>
+                    </select>
+                  </div>
+
+                  <button type="submit" class="w-full rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400">
+                    Save Transaction
+                  </button>
+                </form>
+                <p id="transactionMessage" class="mt-4 hidden rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"></p>
+              </div>
+
+              <div class="glass rounded-2xl border border-slate-700 p-6">
+                <div class="mb-4 flex items-center justify-between">
+                  <h3 class="text-xl font-semibold text-white">Recent Transactions</h3>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full text-left text-sm">
+                    <thead class="border-b border-slate-700 text-slate-300">
+                      <tr>
+                        <th class="pb-3 font-medium">Description</th>
+                        <th class="pb-3 font-medium">Type</th>
+                        <th class="pb-3 font-medium">Amount</th>
+                        <th class="pb-3 font-medium">Date</th>
+                        <th class="pb-3 font-medium">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="transactionTableBody" class="text-slate-200"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
